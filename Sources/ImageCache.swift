@@ -588,10 +588,10 @@ open class ImageCache {
     ///   - identifier: Processor identifier which used for this image. Default is empty string.
     ///   - type: Identifies the preferred cache to check.
     /// - Returns: A `Bool` which indicates if the image was cached in the specific cache
-    open func imageCachedForType(
+    open func imageCached(
         forKey key: String,
         processorIdentifier identifier: String = "",
-        for type: CacheType) -> Bool {
+        type: CacheType) -> Bool {
 
         let computedKey = key.computedKey(with: identifier)
 

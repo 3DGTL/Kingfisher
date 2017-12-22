@@ -591,23 +591,22 @@ open class ImageCache {
     open func imageCachedType(
         forKey key: String,
         processorIdentifier identifier: String = "",
-        in cache: CacheType) -> CacheType {
+        in cache: CacheType) -> Bool {
 
         let computedKey = key.computedKey(with: identifier)
 
         switch cache {
         case .memory:
             if isInMemoryCache(key: computedKey) {
-                return .memory
+                return true
             }
         case .disk:
             if isInDiskCache(key: computedKey) {
-                return .disk
+                return true
             }
-        default:
-            return .none
+        default: break
         }
-        return .none
+        return false
     }
 
     fileprivate func isInMemoryCache(key: String) -> Bool {

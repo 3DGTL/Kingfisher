@@ -565,7 +565,9 @@ open class ImageCache {
     ///   - key: Key for the image.
     ///   - identifier: Processor identifier which used for this image. Default is empty string.
     /// - Returns: A `CacheType` instance which indicates the cache status. `.none` means the image is not in cache yet.
-    open func imageCachedType(forKey key: String, processorIdentifier identifier: String = "") -> CacheType {
+    open func imageCachedType(
+        forKey key: String,
+        processorIdentifier identifier: String = "") -> CacheType {
         let computedKey = key.computedKey(with: identifier)
         
         if memoryCache.object(forKey: computedKey as NSString) != nil {
@@ -583,6 +585,39 @@ open class ImageCache {
             return .disk
         }
         
+        return .none
+    }
+
+    /// Cache type for checking whether an image is cached for a key in the specified cache.
+    ///
+    /// - Parameters:
+    ///   - key: Key for the image.
+    ///   - identifier: Processor identifier which used for this image. Default is empty string.
+    ///   - cache: Identifies the preferred cache to check.
+    /// - Returns: A `CacheType` instance which indicates the cache status. `.none` means the image is not in cache yet.
+    open func imageCachedType(
+        forKey key: String,
+        processorIdentifier identifier: String = "",
+        in cache: CacheType) -> CacheType {
+        let computedKey = key.computedKey(with: identifier)
+
+        switch cache {
+        case .memory:
+            if memoryCache.object(forKey: computedKey as NSString) != nil {
+                return .memory
+            }
+        case .disk:
+            let filePath = cachePath(forComputedKey: computedKey)
+            var diskCached = false
+            ioQueue.sync {
+                diskCached = fileManager.fileExists(atPath: filePath)
+            }
+            if diskCached {
+                return .disk
+            }
+        default:
+            return .none
+        }
         return .none
     }
     

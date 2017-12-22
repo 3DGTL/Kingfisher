@@ -569,22 +569,15 @@ open class ImageCache {
         forKey key: String,
         processorIdentifier identifier: String = "") -> CacheType {
         let computedKey = key.computedKey(with: identifier)
-        
-        if memoryCache.object(forKey: computedKey as NSString) != nil {
+
+        if isInMemoryCache(key: computedKey) {
             return .memory
         }
-        
-        let filePath = cachePath(forComputedKey: computedKey)
-        
-        var diskCached = false
-        ioQueue.sync {
-            diskCached = fileManager.fileExists(atPath: filePath)
-        }
-        
-        if diskCached {
+
+        if isInDiskCache(key: computedKey) {
             return .disk
         }
-        
+
         return .none
     }
 
@@ -599,26 +592,38 @@ open class ImageCache {
         forKey key: String,
         processorIdentifier identifier: String = "",
         in cache: CacheType) -> CacheType {
+
         let computedKey = key.computedKey(with: identifier)
 
         switch cache {
         case .memory:
-            if memoryCache.object(forKey: computedKey as NSString) != nil {
+            if isInMemoryCache(key: computedKey) {
                 return .memory
             }
         case .disk:
-            let filePath = cachePath(forComputedKey: computedKey)
-            var diskCached = false
-            ioQueue.sync {
-                diskCached = fileManager.fileExists(atPath: filePath)
-            }
-            if diskCached {
+            if isInDiskCache(key: computedKey) {
                 return .disk
             }
         default:
             return .none
         }
         return .none
+    }
+
+    fileprivate func isInMemoryCache(key: String) -> Bool {
+        if memoryCache.object(forKey: key as NSString) != nil {
+            return true
+        }
+        return false
+    }
+
+    fileprivate func isInDiskCache(key: String) -> Bool {
+        let filePath = cachePath(forComputedKey: key)
+        var diskCached = false
+        ioQueue.sync {
+            diskCached = fileManager.fileExists(atPath: filePath)
+        }
+        return diskCached
     }
     
     /**

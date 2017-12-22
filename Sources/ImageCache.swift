@@ -581,21 +581,21 @@ open class ImageCache {
         return .none
     }
 
-    /// Cache type for checking whether an image is cached for a key in the specified cache.
+    /// Check if an image is cached in a specific cache
     ///
     /// - Parameters:
     ///   - key: Key for the image.
     ///   - identifier: Processor identifier which used for this image. Default is empty string.
-    ///   - cache: Identifies the preferred cache to check.
-    /// - Returns: A `CacheType` instance which indicates the cache status. `.none` means the image is not in cache yet.
-    open func imageCachedType(
+    ///   - type: Identifies the preferred cache to check.
+    /// - Returns: A `Bool` which indicates if the image was cached in the specific cache
+    open func imageCachedForType(
         forKey key: String,
         processorIdentifier identifier: String = "",
-        in cache: CacheType) -> Bool {
+        for type: CacheType) -> Bool {
 
         let computedKey = key.computedKey(with: identifier)
 
-        switch cache {
+        switch type {
         case .memory:
             if isInMemoryCache(key: computedKey) {
                 return true

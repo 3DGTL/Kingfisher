@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "Kingfisher"
-  s.version      = "4.5.0"
+  s.version      = "4.8.0"
   s.summary      = "A lightweight and pure Swift implemented library for downloading and cacheing image from the web."
 
   s.description  = <<-DESC
@@ -25,6 +25,8 @@ Pod::Spec.new do |s|
   s.authors            = { "onevcat" => "onevcat@gmail.com" }
   s.social_media_url   = "http://twitter.com/onevcat"
 
+  s.swift_version = "4.0"
+
   s.ios.deployment_target = "8.0"
   s.tvos.deployment_target = "9.0"
   s.osx.deployment_target = "10.10"
@@ -35,7 +37,7 @@ Pod::Spec.new do |s|
   s.source_files  = ["Sources/*.swift", "Sources/Kingfisher.h", "Sources/Kingfisher.swift"]
   s.public_header_files = ["Sources/Kingfisher.h"]
   
-  s.osx.exclude_files = ["Sources/AnimatedImageView.swift", "Sources/UIButton+Kingfisher.swift"]
+  s.osx.exclude_files = ["Sources/AnimatedImageView.swift", "Sources/UIButton+Kingfisher.swift", "Sources/WKInterfaceImage+Kingfisher.swift"]
   s.watchos.exclude_files = ["Sources/AnimatedImageView.swift", 
                              "Sources/UIButton+Kingfisher.swift", 
                              "Sources/ImageView+Kingfisher.swift", 
@@ -44,22 +46,10 @@ Pod::Spec.new do |s|
                              "Sources/Filter.swift",
                              "Sources/Placeholder.swift"
                             ]
-  s.ios.exclude_files = "Sources/NSButton+Kingfisher.swift"
-  s.tvos.exclude_files = "Sources/NSButton+Kingfisher.swift"
-  
-  s.resources = ['Sources/CommonCrypto']
+  s.ios.exclude_files = ["Sources/NSButton+Kingfisher.swift", "Sources/WKInterfaceImage+Kingfisher.swift"]
+  s.tvos.exclude_files = ["Sources/NSButton+Kingfisher.swift", "Sources/WKInterfaceImage+Kingfisher.swift"]
 
   s.requires_arc = true
   s.framework = "CFNetwork"
 
-  s.pod_target_xcconfig = { 
-    'SWIFT_VERSION'                              => '4.0', 
-    'SWIFT_INCLUDE_PATHS[sdk=iphoneos*]'         => '$(PODS_TARGET_SRCROOT)/Sources/CommonCrypto/iPhoneOS',
-    'SWIFT_INCLUDE_PATHS[sdk=iphonesimulator*]'  => '$(PODS_TARGET_SRCROOT)/Sources/CommonCrypto/iPhoneSimulator', 
-    'SWIFT_INCLUDE_PATHS[sdk=appletvos*]'        => '$(PODS_TARGET_SRCROOT)/Sources/CommonCrypto/appleTVOS',
-    'SWIFT_INCLUDE_PATHS[sdk=appletvsimulator*]' => '$(PODS_TARGET_SRCROOT)/Sources/CommonCrypto/appleTVSimulator',
-    'SWIFT_INCLUDE_PATHS[sdk=macosx*]'           => '$(PODS_TARGET_SRCROOT)/Sources/CommonCrypto/macOSX',
-    'SWIFT_INCLUDE_PATHS[sdk=watchos*]'          => '$(PODS_TARGET_SRCROOT)/Sources/CommonCrypto/watchOS',
-    'SWIFT_INCLUDE_PATHS[sdk=watchsimulator*]'   => '$(PODS_TARGET_SRCROOT)/Sources/CommonCrypto/watchSimulator',
-  }
 end
